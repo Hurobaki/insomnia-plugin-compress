@@ -1,0 +1,13 @@
+{
+  "name": "insomnia-plugin-compress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "insomnia": {
+    "name": "compress",
+    "description": "Compress input value with chosen algorithm"
+  },
+  "dependencies": {
+    "iconv-lite": "0.6.2"
+  }
+}
