@@ -1,26 +1,31 @@
 {
-  "name": "insomnia-plugin-compress",
-  "version": "1.0.2",
+  "name": "insomnia-plugin-format",
+  "version": "1.0.0",
   "author": "Théo Herveux (https://github.com/Hurobaki)",
   "main": "index.js",
   "license": "MIT",
   "insomnia": {
     "name": "compress",
-    "description": "Compress input value with chosen algorithm"
+    "description": "Format input value with chosen algorithm, it could be raw value or body from http response"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hurobaki/insomnia-plugin-compress.git"
+    "url": "https://github.com/Hurobaki/insomnia-plugin-format.git"
   },
   "keywords": [
     "insomnia",
     "insomnia-plugin",
     "response",
+    "request",
     "body",
-    "compress"
+    "compress",
+    "encode",
+    "json",
+    "xml",
+    "format"
   ],
   "dependencies": {
     "iconv-lite": "0.6.2",
-    "xml2json": "0.12.0"
+    "xml2js": "0.4.23"
   }
 }

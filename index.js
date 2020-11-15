@@ -1,4 +1,6 @@
 const iconv = require('iconv-lite')
+const { findKeyValue } = require('./parsers/object.parser')
+const { findObjectByValue } = require('./parsers/object.parser')
 const { deflateToBase64 } = require('./algortihms/deflate')
 const { encodeBase64 } = require('./algortihms/base64')
 const { xmlToJson } = require('./parsers/xml.parser')
@@ -17,9 +19,9 @@ const ALGORITHM_OPTIONS = {
 
 module.exports.templateTags = [
     {
-        name: 'compress',
-        displayName: 'Compress',
-        description: 'Compress value with chosen algorithm',
+        name: 'format',
+        displayName: 'Format',
+        description: 'Format value with chosen method',
         args: [
             {
                 displayName: 'Value to format',
@@ -80,8 +82,15 @@ module.exports.templateTags = [
                     },
                 ],
             },
+
+            {
+                displayName: 'Filter',
+                type: 'string',
+                placeholder: "JSON key's value to extract",
+                hide: (args) => args[3].value !== ALGORITHM_OPTIONS.xmlToJson,
+            },
         ],
-        async run(context, input, value, requestId, algorithm) {
+        async run(context, input, value, requestId, algorithm, filter) {
             console.log('### algorithm', algorithm)
             let valueToFormat
 
@@ -173,9 +182,22 @@ module.exports.templateTags = [
             } else if (algorithm === ALGORITHM_OPTIONS.base64) {
                 return encodeBase64(valueToFormat)
             } else if (algorithm === ALGORITHM_OPTIONS.xmlToJson) {
-                const json = xmlToJson(valueToFormat, {})
-                console.log('### JSON', json)
-                return json
+                try {
+                    let json = await xmlToJson(valueToFormat, {})
+
+                    if (filter) {
+                        json = findKeyValue(
+                            findObjectByValue(json, filter),
+                            '_'
+                        )
+                    }
+
+                    return json
+                } catch (e) {
+                    throw new Error(
+                        `[parse xml] Failed to parse XML to JSON ${e}`
+                    )
+                }
             }
         },
     },

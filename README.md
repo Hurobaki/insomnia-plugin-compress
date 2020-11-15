@@ -1,14 +1,14 @@
-# Insomnia plugin - Compress
+# Insomnia plugin - Format
 
 Compress or encode response body from custom requests or given value using chosen algorithm
 
-![Plugin screenshot](https://raw.githubusercontent.com/Hurobaki/insomnia-plugin-compress/master/screenshots/main.png)
+![Plugin screenshot](https://raw.githubusercontent.com/Hurobaki/insomnia-plugin-format/master/screenshots/main.png)
 
 ## Installation
 
 * Open **Insomnia** -> go to preferences ( Cmd + , )
 * Select **Plugins** tab
-* Insert `insomnia-plugin-compress` in npm package field
+* Insert `insomnia-plugin-format` in npm package field
 
 ## Usage
 
