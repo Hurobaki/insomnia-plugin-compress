@@ -1,6 +1,7 @@
 const iconv = require('iconv-lite')
 const { deflateToBase64 } = require('./algortihms/deflate')
 const { encodeBase64 } = require('./algortihms/base64')
+const { xmlToJson } = require('./parsers/xml.parser')
 
 const OPTIONS = {
     rawValue: 'rawValue',
@@ -10,6 +11,7 @@ const OPTIONS = {
 const ALGORITHM_OPTIONS = {
     deflateBase64: 'deflateBase64',
     base64: 'base64',
+    xmlToJson: 'xmlToJson',
     none: '',
 }
 
@@ -20,7 +22,7 @@ module.exports.templateTags = [
         description: 'Compress value with chosen algorithm',
         args: [
             {
-                displayName: 'Value to compress',
+                displayName: 'Value to format',
                 type: 'enum',
                 options: [
                     {
@@ -49,7 +51,7 @@ module.exports.templateTags = [
                 hide: (args) => args[0].value === OPTIONS.rawValue,
             },
             {
-                displayName: 'Algorithm',
+                displayName: 'Algorithm / Hash / Encode / Format',
                 type: 'enum',
                 options: [
                     {
@@ -66,11 +68,22 @@ module.exports.templateTags = [
                         value: ALGORITHM_OPTIONS.base64,
                         description: 'Encode to base64 given value',
                     },
+                    {
+                        displayName: 'Base64 decode',
+                        value: 'none',
+                        description: 'Decode base64 given value',
+                    },
+                    {
+                        displayName: 'Convert XML/Soap to JSON',
+                        value: ALGORITHM_OPTIONS.xmlToJson,
+                        description: 'Convert XML/Soap to JSON object',
+                    },
                 ],
             },
         ],
         async run(context, input, value, requestId, algorithm) {
             console.log('### algorithm', algorithm)
+            let valueToFormat
 
             if (![...Object.values(OPTIONS)].includes(input)) {
                 throw new Error(`Invalid value field ${input}`)
@@ -138,17 +151,7 @@ module.exports.templateTags = [
                     return body
                 }
 
-                if (algorithm === ALGORITHM_OPTIONS.deflateBase64) {
-                    try {
-                        return deflateToBase64(body.trim())
-                    } catch (e) {
-                        throw new Error(
-                            `[compress] Failed to compress using ${ALGORITHM_OPTIONS.deflateBase64} algorithm. Reason: ${e}`
-                        )
-                    }
-                } else if (algorithm === ALGORITHM_OPTIONS.base64) {
-                    return encodeBase64(body)
-                }
+                valueToFormat = body
             } else if (input === OPTIONS.rawValue) {
                 const emptyString = 'b64::::46b'
 
@@ -156,13 +159,23 @@ module.exports.templateTags = [
                     throw new Error('Please enter a value')
                 }
 
-                if (algorithm === ALGORITHM_OPTIONS.base64) {
-                    return encodeBase64(value)
-                } else if (algorithm === ALGORITHM_OPTIONS.deflateBase64) {
-                    return deflateToBase64(value)
-                }
+                valueToFormat = value
+            }
 
-                return value
+            if (algorithm === ALGORITHM_OPTIONS.deflateBase64) {
+                try {
+                    return deflateToBase64(valueToFormat.trim())
+                } catch (e) {
+                    throw new Error(
+                        `[compress] Failed to compress using ${ALGORITHM_OPTIONS.deflateBase64} algorithm. Reason: ${e}`
+                    )
+                }
+            } else if (algorithm === ALGORITHM_OPTIONS.base64) {
+                return encodeBase64(valueToFormat)
+            } else if (algorithm === ALGORITHM_OPTIONS.xmlToJson) {
+                const json = xmlToJson(valueToFormat, {})
+                console.log('### JSON', json)
+                return json
             }
         },
     },
