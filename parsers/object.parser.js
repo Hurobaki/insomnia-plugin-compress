@@ -22,7 +22,7 @@ exports.objectHasValue = (obj, valueToFind) => {
             return true
         }
 
-        if (typeof value === 'object') {
+        if (typeof value === 'object' && value) {
             return exports.objectHasValue(value, valueToFind)
         }
 

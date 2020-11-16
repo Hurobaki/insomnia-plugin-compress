@@ -9,10 +9,24 @@ iconv-lite@0.6.2:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
+lodash@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
+  integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
+
 "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+saml2js@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/saml2js/-/saml2js-0.1.2.tgz#f97ed46f12e53c20304eb33b1d36b36388b2365b"
+  integrity sha1-+X7UbxLlPCAwTrM7HTazY4iyNls=
+  dependencies:
+    lodash "^3.10.1"
+    xmldom "^0.1.16"
+    xpath "0.0.5"
 
 sax@>=0.6.0:
   version "1.2.4"
@@ -31,3 +45,13 @@ xmlbuilder@~11.0.0:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
   integrity sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==
+
+xmldom@^0.1.16:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.31.tgz#b76c9a1bd9f0a9737e5a72dc37231cf38375e2ff"
+  integrity sha512-yS2uJflVQs6n+CyjHoaBmVSqIDevTAWrzMmjG1Gc7h1qQ7uVozNhEPJAwZXWyGQ/Gafo3fCwrcaokezLPupVyQ==
+
+xpath@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/xpath/-/xpath-0.0.5.tgz#454036f6ef0f3df5af5d4ba4a119fb75674b3e6c"
+  integrity sha1-RUA29u8PPfWvXUukoRn7dWdLPmw=

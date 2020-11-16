@@ -1,4 +1,5 @@
 const iconv = require('iconv-lite')
+const { decodeBase64 } = require('./algortihms/base64')
 const { findKeyValue } = require('./parsers/object.parser')
 const { findObjectByValue } = require('./parsers/object.parser')
 const { deflateToBase64 } = require('./algortihms/deflate')
@@ -13,7 +14,9 @@ const OPTIONS = {
 const ALGORITHM_OPTIONS = {
     deflateBase64: 'deflateBase64',
     base64: 'base64',
-    xmlToJson: 'xmlToJson',
+    decodeBase64: 'decodeBase64',
+    samlToJson: 'samlToJson',
+    extractJson: 'extractJson',
     none: '',
 }
 
@@ -72,13 +75,18 @@ module.exports.templateTags = [
                     },
                     {
                         displayName: 'Base64 decode',
-                        value: 'none',
+                        value: ALGORITHM_OPTIONS.decodeBase64,
                         description: 'Decode base64 given value',
                     },
                     {
-                        displayName: 'Convert XML/Soap to JSON',
-                        value: ALGORITHM_OPTIONS.xmlToJson,
-                        description: 'Convert XML/Soap to JSON object',
+                        displayName: 'Convert SAML/Soap to JSON',
+                        value: ALGORITHM_OPTIONS.samlToJson,
+                        description:
+                            'Convert SAML/Soap response body to JSON object',
+                    },
+                    {
+                        displayName: 'Extract JSON key',
+                        value: ALGORITHM_OPTIONS.extractJson,
                     },
                 ],
             },
@@ -87,11 +95,14 @@ module.exports.templateTags = [
                 displayName: 'Filter',
                 type: 'string',
                 placeholder: "JSON key's value to extract",
-                hide: (args) => args[3].value !== ALGORITHM_OPTIONS.xmlToJson,
+                hide: (args) =>
+                    ![
+                        ALGORITHM_OPTIONS.samlToJson,
+                        ALGORITHM_OPTIONS.extractJson,
+                    ].includes(args[3].value),
             },
         ],
         async run(context, input, value, requestId, algorithm, filter) {
-            console.log('### algorithm', algorithm)
             let valueToFormat
 
             if (![...Object.values(OPTIONS)].includes(input)) {
@@ -168,7 +179,11 @@ module.exports.templateTags = [
                     throw new Error('Please enter a value')
                 }
 
-                valueToFormat = value
+                if (algorithm === ALGORITHM_OPTIONS.extractJson) {
+                    valueToFormat = JSON.parse(value)
+                } else {
+                    valueToFormat = value
+                }
             }
 
             if (algorithm === ALGORITHM_OPTIONS.deflateBase64) {
@@ -181,7 +196,9 @@ module.exports.templateTags = [
                 }
             } else if (algorithm === ALGORITHM_OPTIONS.base64) {
                 return encodeBase64(valueToFormat)
-            } else if (algorithm === ALGORITHM_OPTIONS.xmlToJson) {
+            } else if (algorithm === ALGORITHM_OPTIONS.decodeBase64) {
+                return decodeBase64(valueToFormat)
+            } else if (algorithm === ALGORITHM_OPTIONS.samlToJson) {
                 try {
                     let json = await xmlToJson(valueToFormat, {})
 
@@ -195,9 +212,15 @@ module.exports.templateTags = [
                     return json
                 } catch (e) {
                     throw new Error(
-                        `[parse xml] Failed to parse XML to JSON ${e}`
+                        `[parse xml] Failed to parse SAML to JSON ${e}`
                     )
                 }
+            } else if (algorithm === ALGORITHM_OPTIONS.extractJson) {
+                if (filter) {
+                    return findKeyValue(valueToFormat, filter)
+                }
+
+                return JSON.stringify(valueToFormat)
             }
         },
     },

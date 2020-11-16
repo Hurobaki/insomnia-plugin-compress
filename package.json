@@ -1,6 +1,6 @@
 {
   "name": "insomnia-plugin-format",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Théo Herveux (https://github.com/Hurobaki)",
   "main": "index.js",
   "license": "MIT",
@@ -22,7 +22,8 @@
     "encode",
     "json",
     "xml",
-    "format"
+    "format",
+    "saml"
   ],
   "dependencies": {
     "iconv-lite": "0.6.2",
